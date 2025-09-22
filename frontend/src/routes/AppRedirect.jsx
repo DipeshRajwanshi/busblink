@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/Auth"; // your auth context
+import { useAuth } from "../context/Auth"; 
 
 const RoleRedirect = () => {
   const { user, role, loading } = useAuth();

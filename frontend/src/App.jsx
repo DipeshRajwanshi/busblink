@@ -29,14 +29,14 @@ const App = () => {
   // Show a loading spinner while Firebase is checking the auth state
   if (loading) return <LoadingSpinner />;
 
-  // 🔒 Protect dashboard routes by user role
+  // Protect dashboard routes by user role
   const ProtectedRoute = ({ allowedRoles, children }) => {
     if (!user) return <Navigate to="/login" replace />;
     if (!allowedRoles.includes(role)) return <Navigate to="/" replace />;
     return children;
   };
 
-  // 🔁 Redirect logged-in users away from login/register
+  // Redirect logged-in users away from login/register
   const RedirectIfLoggedIn = ({ children }) => {
     if (user) return <Navigate to={`/${role}/dashboard`} replace />;
     return children;

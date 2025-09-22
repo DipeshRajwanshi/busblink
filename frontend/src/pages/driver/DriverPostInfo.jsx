@@ -1,4 +1,3 @@
-// src/pages/driver/DriverPostInfo.jsx
 import React, { useState } from "react";
 import { db, auth } from "../../firebase/config";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";

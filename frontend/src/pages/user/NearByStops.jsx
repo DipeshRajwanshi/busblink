@@ -13,7 +13,7 @@ const NearbyStops = () => {
   const [loading, setLoading] = useState(true);
   const [stops, setStops] = useState([]);
 
-  // Dummy static stops near current location (for demo)
+  // Dummy static stops near current location 
   const generateDummyStops = (lat, lng) => {
     return [
       { id: 1, name: "Stop A", lat: lat + 0.001, lng: lng + 0.001 },

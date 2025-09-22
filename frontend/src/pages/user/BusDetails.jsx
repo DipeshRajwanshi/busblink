@@ -25,7 +25,7 @@ const BusDetails = () => {
   const [busData, setBusData] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Dummy bus data (replace with Firebase later)
+  // Dummy bus data
   useEffect(() => {
     setLoading(true);
 

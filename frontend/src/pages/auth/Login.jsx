@@ -6,7 +6,7 @@ import {
 } from "firebase/auth";
 import { auth, db } from "../../firebase/config";
 import { useNavigate } from "react-router-dom";
-import { getDoc, doc } from "firebase/firestore";
+import { getDoc, setDoc, doc } from "firebase/firestore"; 
 import { Mail, Lock, Eye, EyeOff, AlertCircle } from "lucide-react";
 
 const Login = () => {
@@ -18,6 +18,24 @@ const Login = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState("");
 
+  // helper: ensure user doc exists
+  const createUserDocIfMissing = async (uid, user) => {
+    const userRef = doc(db, "users", uid);
+    const docSnap = await getDoc(userRef);
+
+    if (!docSnap.exists()) {
+      await setDoc(userRef, {
+        email: user.email,
+        role: "user", // default role
+        createdAt: Date.now(),
+      });
+      console.log("New Firestore user created:", uid);
+      return { role: "user" };
+    }
+
+    return docSnap.data();
+  };
+
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
@@ -26,15 +44,12 @@ const Login = () => {
       const userCred = await signInWithEmailAndPassword(auth, email, password);
       const uid = userCred.user.uid;
 
-      const docSnap = await getDoc(doc(db, "users", uid));
-      const userData = docSnap.exists() ? docSnap.data() : null;
+      // ensure Firestore user doc exists
+      const userData = await createUserDocIfMissing(uid, userCred.user);
 
-      if (userData?.role) {
-        navigate(`/${userData.role}/dashboard`);
-      } else {
-        navigate("/user/dashboard");
-      }
+      navigate(`/${userData.role || "user"}/dashboard`);
     } catch (err) {
+      console.error("Login error:", err);
       setError("Login failed. Please check your credentials.");
     }
   };
@@ -45,15 +60,12 @@ const Login = () => {
       const userCred = await signInWithPopup(auth, provider);
       const uid = userCred.user.uid;
 
-      const docSnap = await getDoc(doc(db, "users", uid));
-      const userData = docSnap.exists() ? docSnap.data() : null;
+      // ensure Firestore user doc exists
+      const userData = await createUserDocIfMissing(uid, userCred.user);
 
-      if (userData?.role) {
-        navigate(`/${userData.role}/dashboard`);
-      } else {
-        navigate("/user/dashboard");
-      }
+      navigate(`/${userData.role || "user"}/dashboard`);
     } catch (err) {
+      console.error("Google login error:", err);
       setError("Google Sign-in failed.");
     }
   };

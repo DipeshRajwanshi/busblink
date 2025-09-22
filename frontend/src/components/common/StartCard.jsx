@@ -7,7 +7,7 @@ const StatCard = ({
   icon,
   color = "bg-gray-100 text-gray-700",
   loading = false,
-  progress = null, // 0 to 100
+  progress = null, 
 }) => {
   return (
     <div
